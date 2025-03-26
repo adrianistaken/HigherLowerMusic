@@ -35,7 +35,7 @@ onMounted(async () => {
 const getArtist = async () => {
   if (data.artistsList.length < 5) {
     await axios({
-      url: 'http://localhost:4000/getArtist',
+      url: `${import.meta.env.VITE_API_URL}/getArtist`,
       method: 'GET',
     })
       .then(function (response) {
