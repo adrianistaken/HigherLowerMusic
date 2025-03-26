@@ -5,7 +5,6 @@ const morgan = require("morgan");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const SpotifyWebApi = require("spotify-web-api-node");
-
 require("dotenv").config();
 
 const app = express();
