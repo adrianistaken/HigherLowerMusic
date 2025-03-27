@@ -4,6 +4,7 @@
 import { reactive, ref, onMounted, computed } from 'vue';
 import ArtistCard from './components/ArtistCard.vue';
 import Header from './components/Header.vue';
+import MainMenu from './components/MainMenu.vue';
 import axios from 'axios';
 
 const data = reactive({
@@ -109,75 +110,73 @@ defineExpose({ showListeners });
 </script>
 
 <template>
-  <div class="w-full min-h-[100vh] bg-neutral-900 text-center text-slate-200 py-1 flex justify-center items-center">
-    <div>
-      <div v-if="!data.gameActive" class="h-screen m-auto flex items-center justify-center">
-        <div>
-          <!-- Title -->
-          <h1 class="text-2xl font-bold">Higher Lower Music</h1>
+  <div>
+    <!-- Intro component -->
+    <div v-if="!data.gameActive" class="">
+      <MainMenu @startGame="startGame" />
+    </div>
 
-          <button class="btn btn-primary">Primary test</button>
+    <Header v-if="data.gameActive" :score="data.score" />
 
-          <p class="max-w-[400px] mt-5">Guess if the second artist has a higher or lower monthly listener count than the
-            first artist!</p>
-          <p class="max-w-[400px] mt-1 mb-5">(based on Spotify's updated monthly listener count)</p>
-          <!-- Start Game button -->
-          <button v-if="!data.gameActive" class="mt-3 bg-slate-100 text-slate-900 rounded-sm px-2 py-1"
-            @click="startGame">Start Game</button>
-        </div>
-      </div>
+    <!-- Main game - artists info section -->
+    <div v-if="data.gameActive" class="">
 
-      <Header v-if="data.gameActive" :score="data.score" />
+      <div class="hero bg-base-200 min-h-screen">
+        <div class="hero-content text-center">
+          <div class="max-w-md">
+            <div class="flex w-full">
+              <div class="card bg-base-300 rounded-box grid grow place-items-center p-6">
+                <ArtistCard v-if="data.gameActive" :artist="data.artistsList[0]" :showListeners="true" />
+              </div>
+              <div class="divider divider-horizontal mx-10">
 
-      <!-- Main game - artists info section -->
-      <div v-if="data.gameActive" class="flex m-auto mt-3 mb-1 flex-col">
+                <div class="mx-auto my-4 h-10 w-full flex items-center justify-center">
+                  <div class="h-[.5px] w-full bg-neutral-500"></div>
+                  <div class="bg-neutral-900 rounded-full z-10 w-10 h-10 absolute border-neutral-500 border-[1px]">
+                  </div>
 
-        <!-- Artist one -->
-        <ArtistCard v-if="data.gameActive" :artist="data.artistsList[0]" :showListeners="true" />
+                  <!-- Green correct icon -->
+                  <svg v-if="data.answerCorrect" class="result_shape checkmark m-auto absolute z-20"
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <circle class="result_circle checkmark_circle" cx="26" cy="26" r="25" fill="none" />
+                    <path class="result_outline" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                  </svg>
+                  <!-- Red incorrect icon -->
+                  <svg v-if="data.answerIncorrect" class="result_shape xmark m-auto absolute z-20"
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <circle class="result_circle xmark_circle" cx="26" cy="26" r="25" fill="none" />
+                    <path class="result_outline" fill="none" d="M16 16 36 36 M36 16 16 36" />
+                  </svg>
+                </div>
 
-        <div class="mx-auto my-4 h-10 w-full flex items-center justify-center">
-          <div class="h-[.5px] w-full bg-neutral-500"></div>
-          <div class="bg-neutral-900 rounded-full z-10 w-10 h-10 absolute border-neutral-500 border-[1px]"></div>
-
-          <!-- Green correct icon -->
-          <svg v-if="data.answerCorrect" class="result_shape checkmark m-auto absolute z-20"
-            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-            <circle class="result_circle checkmark_circle" cx="26" cy="26" r="25" fill="none" />
-            <path class="result_outline" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
-          </svg>
-          <!-- Red incorrect icon -->
-          <svg v-if="data.answerIncorrect" class="result_shape xmark m-auto absolute z-20"
-            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-            <circle class="result_circle xmark_circle" cx="26" cy="26" r="25" fill="none" />
-            <path class="result_outline" fill="none" d="M16 16 36 36 M36 16 16 36" />
-          </svg>
-        </div>
-
-
-        <div>
-          <!-- Artist two -->
-          <ArtistCard v-if="data.gameActive" :artist="data.artistsList[1]" :showListeners="showListeners" />
-          <!-- Higher/Lower guess buttons -->
-          <p v-if="!showListeners">{{ data.artistsList[1].info.name }}'s monthly listeners is higher or lower than
-            {{ data.artistsList[0].info.name }}..</p>
-          <div v-if="!data.showGameOverMessage" class="flex space-x-12 justify-center mt-3">
-            <button class="disabled:opacity-50 px-1 py-2 rounded-full w-16 h-16 bg-[#7ac142]" @click="answerHigher"
-              :disabled="data.answerIncorrect || data.answerCorrect">Higher</button>
-            <button class="disabled:opacity-50 px-1 py-2 rounded-full w-16 h-16 bg-[#c15142]" @click="answerLower"
-              :disabled="data.answerIncorrect || data.answerCorrect">Lower</button>
+              </div>
+              <div class="card bg-base-300 rounded-box grid grow place-items-center p-6">
+                <ArtistCard v-if="data.gameActive" :artist="data.artistsList[1]" :showListeners="showListeners" />
+              </div>
+            </div>
+            <div>
+              <!-- Higher/Lower guess buttons -->
+              <p v-if="!showListeners">{{ data.artistsList[1].info.name }}'s monthly listeners is higher or lower
+                than
+                {{ data.artistsList[0].info.name }}..</p>
+              <div v-if="!data.showGameOverMessage" class="flex space-x-12 justify-center mt-3">
+                <button class="disabled:opacity-50 px-1 py-2 rounded-full w-16 h-16 bg-[#7ac142]" @click="answerHigher"
+                  :disabled="data.answerIncorrect || data.answerCorrect">Higher</button>
+                <button class="disabled:opacity-50 px-1 py-2 rounded-full w-16 h-16 bg-[#c15142]" @click="answerLower"
+                  :disabled="data.answerIncorrect || data.answerCorrect">Lower</button>
+              </div>
+            </div>
+            <!-- Start/new game buttons -->
+            <div>
+              <!-- Game over message -->
+              <h3 v-if="data.showGameOverMessage" class="text-[#c15142] font-bold text-xl">Game Over</h3>
+              <button v-if="data.showGameOverMessage"
+                class="game-button mt-1 bg-slate-100 text-slate-900 rounded-sm px-2 py-1" @click="newGame">New
+                Game</button>
+            </div>
           </div>
         </div>
-
       </div>
-
-      <!-- Start/new game buttons -->
-      <div>
-        <!-- Game over message -->
-        <h3 v-if="data.showGameOverMessage" class="text-[#c15142] font-bold text-xl">Game Over</h3>
-        <button v-if="data.showGameOverMessage"
-          class="game-button mt-1 bg-slate-100 text-slate-900 rounded-sm px-2 py-1" @click="newGame">New Game</button>
-      </div>
-
     </div>
   </div>
 </template>
