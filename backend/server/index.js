@@ -54,10 +54,14 @@ const getRandomSearch = () => {
 
 // GET request to Spotify API for a random artists' info
 // and web scrape to get their monthly listener count.
-const getArtist = async () => {
+const getArtist = async (retries = 5) => {
+  if (retries === 0) {
+    console.log("Failed to find valid artist after retries.");
+    return null;
+  }
+
   const randomOffset = Math.floor(Math.random() * 100);
   const randomLetter = getRandomSearch();
-  console.log("randomLetter:", randomLetter);
 
   try {
     const data = await spotifyApi.searchArtists(randomLetter, {
@@ -67,29 +71,25 @@ const getArtist = async () => {
 
     const artist = data.body.artists.items[0];
     if (!artist || artist.followers.total < 10000) {
-      console.log("low follower count..");
-      return null;
+      console.log("Low follower count or no artist found, retrying...");
+      return getArtist(retries - 1);
     }
-
-    console.log("GOOD follower count..");
 
     const listeners = await getArtistListeners(artist.external_urls.spotify);
     if (!listeners) {
       console.log("No listeners found, retrying...");
-      return null;
+      return getArtist(retries - 1);
     }
 
-    const artistData = {
+    console.log('"Artist found:", artist.name);');
+    return {
       info: artist,
       listeners: listeners,
     };
-
-    console.log("artistData:", artistData);
-    return artistData;
   } catch (err) {
     console.error("Error fetching artist:", err);
-    getSpotifyApiCredentials();
-    return null;
+    getSpotifyApiCredentials(); // Refresh token just in case
+    return getArtist(retries - 1);
   }
 };
 
@@ -123,51 +123,35 @@ const convertListenersToNumber = (number) => {
 
 app.get("/getArtists", async (req, res) => {
   console.log("/getArtists was hit");
-  try {
-    let artists = [];
+  let artists = [];
+  let attempts = 0;
+  const maxAttempts = 10;
 
-    while (artists.length < 2) {
-      const artist = await getArtist();
-      if (artist) artists.push(artist);
+  while (artists.length < 2 && attempts < maxAttempts) {
+    const artist = await getArtist();
+    if (artist) {
+      artists.push(artist);
     }
-
-    res.status(200).send(artists);
-  } catch (error) {
-    console.error("Error fetching artists:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    attempts++;
   }
-});
 
-// app.get('/getArtists', async (req, res) => {
-//   console.log('/getArtists was hit');
-//   try {
-//     await Promise.all([getArtist(), getArtist()])
-//     .then((artists) => {
-//       res.status(200).send(artists);
-//     })
-//   } catch (error) {
-//     console.error('Error fetching artists:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// })
+  if (artists.length < 2) {
+    return res
+      .status(500)
+      .json({ error: "Could not fetch enough valid artists." });
+  }
+
+  res.status(200).send(artists);
+});
 
 app.get("/getArtist", async (req, res) => {
   console.log("/getArtist was hit");
-  var artist = await getArtist();
+  const artist = await getArtist();
+  if (!artist) {
+    return res.status(404).json({ error: "No suitable artist found." });
+  }
   res.status(200).send(artist);
 });
-
-// app.get(/.*/, (req, res) => {
-//   console.log('ALL CATCH WAS HIT');
-// })
-
-// console.log('this was hit');
-
-// if (process.env.NODE_ENV === 'production') {
-//  console.log('IN PRODUCTION');
-//  app.use(express.static(__dirname + '/public/'));
-//  app.get(/.*/, (req, res) => res.sendFile(__dirname + '/public/index.html'));
-// }
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
