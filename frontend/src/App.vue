@@ -27,7 +27,6 @@ onMounted(async () => {
     method: 'GET',
   })
     .then((response) => {
-      console.log("response", response.data);
       data.artistsList = response.data;
     })
 })
@@ -116,6 +115,9 @@ defineExpose({ showListeners });
         <div>
           <!-- Title -->
           <h1 class="text-2xl font-bold">Higher Lower Music</h1>
+
+          <button class="btn btn-primary">Primary test</button>
+
           <p class="max-w-[400px] mt-5">Guess if the second artist has a higher or lower monthly listener count than the
             first artist!</p>
           <p class="max-w-[400px] mt-1 mb-5">(based on Spotify's updated monthly listener count)</p>
