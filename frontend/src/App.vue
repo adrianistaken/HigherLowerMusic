@@ -123,7 +123,7 @@ defineExpose({ showListeners });
 
       <div class="hero bg-base-200 min-h-screen">
         <div class="hero-content text-center">
-          <div class="max-w-md">
+          <div class="max-w-5xl">
             <div class="flex w-full">
               <div class="card bg-base-300 rounded-box grid grow place-items-center p-6">
                 <ArtistCard v-if="data.gameActive" :artist="data.artistsList[0]" :showListeners="true" />
@@ -154,25 +154,25 @@ defineExpose({ showListeners });
                 <ArtistCard v-if="data.gameActive" :artist="data.artistsList[1]" :showListeners="showListeners" />
               </div>
             </div>
-            <div>
+            <div class="mt-5">
               <!-- Higher/Lower guess buttons -->
-              <p v-if="!showListeners">{{ data.artistsList[1].info.name }}'s monthly listeners is higher or lower
+              <p v-if="!data.showGameOverMessage">{{ data.artistsList[1].info.name }}'s monthly listeners is higher or
+                lower
                 than
                 {{ data.artistsList[0].info.name }}..</p>
-              <div v-if="!data.showGameOverMessage" class="flex space-x-12 justify-center mt-3">
-                <button class="disabled:opacity-50 px-1 py-2 rounded-full w-16 h-16 bg-[#7ac142]" @click="answerHigher"
+              <div v-if="!data.showGameOverMessage" class="flex gap-4 justify-center mt-3">
+                <button class="btn btn-outline btn-success disabled:opacity-50" @click="answerHigher"
                   :disabled="data.answerIncorrect || data.answerCorrect">Higher</button>
-                <button class="disabled:opacity-50 px-1 py-2 rounded-full w-16 h-16 bg-[#c15142]" @click="answerLower"
+                <button class="btn btn-outline btn-error disabled:opacity-50" @click="answerLower"
                   :disabled="data.answerIncorrect || data.answerCorrect">Lower</button>
               </div>
             </div>
             <!-- Start/new game buttons -->
             <div>
               <!-- Game over message -->
-              <h3 v-if="data.showGameOverMessage" class="text-[#c15142] font-bold text-xl">Game Over</h3>
-              <button v-if="data.showGameOverMessage"
-                class="game-button mt-1 bg-slate-100 text-slate-900 rounded-sm px-2 py-1" @click="newGame">New
-                Game</button>
+              <h3 v-if="data.showGameOverMessage" class="text-[#c15142] font-bold">Game Over</h3>
+              <button v-if="data.showGameOverMessage" class="btn btn-success disabled:opacity-50 mt-3"
+                @click="newGame">New Game</button>
             </div>
           </div>
         </div>
@@ -191,8 +191,6 @@ defineExpose({ showListeners });
     margin: none;
   }
 }
-
-.game-button {}
 
 .result_circle {
   stroke-dasharray: 166;
