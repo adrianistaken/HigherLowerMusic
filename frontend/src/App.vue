@@ -6,6 +6,8 @@ import ArtistCard from './components/ArtistCard.vue';
 import Header from './components/Header.vue';
 import MainMenu from './components/MainMenu.vue';
 import axios from 'axios';
+const correct_guess = new Audio('../public/sounds/level-up-short.mp3');
+const incorrect_guess = new Audio('../public/sounds/meep-merp.mp3');
 
 const data = reactive({
   artistsList: [],
@@ -15,7 +17,12 @@ const data = reactive({
   score: 0,
   answerCorrect: false,
   answerIncorrect: false,
+
+  volumePercent: 40,
+  isMuted: false,
 })
+
+const volume = computed(() => data.isMuted ? 0 : data.volumePercent / 100)
 
 const showListeners = computed(() => {
   if (data.showGameOverMessage || data.answerCorrect) return true;
@@ -68,6 +75,7 @@ const answerHigher = () => {
   if (artistTwoListeners > artistOneListeners || artistOneListeners === artistTwoListeners) {
     data.score++;
     data.answerCorrect = true;
+    playSound('../public/sounds/level-up-short.mp3');
 
     setTimeout(() => {
       data.artistsList.shift();
@@ -77,6 +85,7 @@ const answerHigher = () => {
     if (data.artistsList.length < 5) getArtist();
   } else {
     data.answerIncorrect = true;
+    playSound('../public/sounds/meep-merp.mp3');
     setTimeout(() => {
       data.showGameOverMessage = true;
     }, 2000)
@@ -90,6 +99,7 @@ const answerLower = () => {
   if (artistTwoListeners < artistOneListeners || artistOneListeners === artistTwoListeners) {
     data.score++;
     data.answerCorrect = true;
+    playSound('../public/sounds/level-up-short.mp3');
 
     setTimeout(() => {
       data.artistsList.shift();
@@ -99,11 +109,19 @@ const answerLower = () => {
     if (data.artistsList.length < 5) getArtist();
   } else {
     data.answerIncorrect = true;
+    playSound('../public/sounds/meep-merp.mp3');
     setTimeout(() => {
       data.showGameOverMessage = true;
     }, 1800)
 
   }
+}
+
+function playSound(path) {
+  const audio = new Audio(path)
+  audio.volume = data.isMuted ? 0 : data.volumePercent / 100
+  audio.play()
+  console.log('Playing at volume:', audio.volume)
 }
 
 defineExpose({ showListeners });
@@ -112,27 +130,32 @@ defineExpose({ showListeners });
 <template>
   <div>
     <!-- Intro component -->
-    <div v-if="!data.gameActive" class="">
+    <div v-if="!data.gameActive"
+      class="w-full h-screen animate-subtle-gradient bg-gradient-to-br from-orange-200 via-green-700 to-blue-900 bg-[length:300%_300%]">
       <MainMenu @startGame="startGame" />
     </div>
 
-    <Header v-if="data.gameActive" :score="data.score" />
+    <Header v-if="data.gameActive" :score="data.score" :volumePercent="data.volumePercent" :isMuted="data.isMuted"
+      @toggleMute="data.isMuted = !data.isMuted" @update-volume="data.volumePercent = $event"
+      @update-muted="data.isMuted = $event" />
 
     <!-- Main game - artists info section -->
-    <div v-if="data.gameActive" class="">
+    <div v-if="data.gameActive"
+      class="w-full h-screen animate-subtle-gradient bg-gradient-to-br from-orange-200 via-green-700 to-blue-900 bg-[length:300%_300%]">
 
-      <div class="hero bg-base-200 min-h-screen">
+      <div class="hero bg-base-200/0 min-h-screen">
         <div class="hero-content text-center">
           <div class="max-w-5xl">
             <div class="flex w-full">
-              <div class="card bg-base-300 rounded-box grid grow place-items-center p-6">
+              <div class="card bg-[rgba(32,32,32,0.35)] rounded-box grid grow place-items-center p-6 max-w-[368px]">
                 <ArtistCard v-if="data.gameActive" :artist="data.artistsList[0]" :showListeners="true" />
               </div>
               <div class="divider divider-horizontal mx-10">
 
                 <div class="mx-auto my-4 h-10 w-full flex items-center justify-center">
-                  <div class="h-[.5px] w-full bg-neutral-500"></div>
-                  <div class="bg-neutral-900 rounded-full z-10 w-10 h-10 absolute border-neutral-500 border-[1px]">
+                  <div class="h-[.5px] w-full"></div>
+                  <div
+                    class="bg-[rgba(32,32,32,0.35)] rounded-full z-10 w-10 h-10 absolute border-neutral-500 border-[1px]">
                   </div>
 
                   <!-- Green correct icon -->
@@ -150,7 +173,7 @@ defineExpose({ showListeners });
                 </div>
 
               </div>
-              <div class="card bg-base-300 rounded-box grid grow place-items-center p-6">
+              <div class="card bg-[rgba(32,32,32,0.35)] rounded-box grid grow place-items-center p-6 max-w-[368px]">
                 <ArtistCard v-if="data.gameActive" :artist="data.artistsList[1]" :showListeners="showListeners" />
               </div>
             </div>
@@ -161,9 +184,9 @@ defineExpose({ showListeners });
                 than
                 {{ data.artistsList[0].info.name }}..</p>
               <div v-if="!data.showGameOverMessage" class="flex gap-4 justify-center mt-3">
-                <button class="btn btn-outline btn-success disabled:opacity-50" @click="answerHigher"
+                <button class="btn btn-success disabled:opacity-50" @click="answerHigher"
                   :disabled="data.answerIncorrect || data.answerCorrect">Higher</button>
-                <button class="btn btn-outline btn-error disabled:opacity-50" @click="answerLower"
+                <button class="btn btn-error disabled:opacity-50" @click="answerLower"
                   :disabled="data.answerIncorrect || data.answerCorrect">Lower</button>
               </div>
             </div>
@@ -264,5 +287,23 @@ defineExpose({ showListeners });
   100% {
     box-shadow: inset 0px 0px 0px 30px #c15142;
   }
+}
+
+@keyframes subtleGradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-subtle-gradient {
+  animation: subtleGradientShift 30s ease infinite;
 }
 </style>
