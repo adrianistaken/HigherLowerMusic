@@ -6,8 +6,6 @@ import ArtistCard from './components/ArtistCard.vue';
 import Header from './components/Header.vue';
 import MainMenu from './components/MainMenu.vue';
 import axios from 'axios';
-const correct_guess = new Audio('../public/sounds/level-up-short.mp3');
-const incorrect_guess = new Audio('../public/sounds/meep-merp.mp3');
 
 const data = reactive({
   artistsList: [],
@@ -75,7 +73,7 @@ const answerHigher = () => {
   if (artistTwoListeners > artistOneListeners || artistOneListeners === artistTwoListeners) {
     data.score++;
     data.answerCorrect = true;
-    playSound('../public/sounds/level-up-short.mp3');
+    playSound('/sounds/level-up-short.mp3');
 
     setTimeout(() => {
       data.artistsList.shift();
@@ -85,7 +83,7 @@ const answerHigher = () => {
     if (data.artistsList.length < 5) getArtist();
   } else {
     data.answerIncorrect = true;
-    playSound('../public/sounds/meep-merp.mp3');
+    playSound('/sounds/meep-merp.mp3');
     setTimeout(() => {
       data.showGameOverMessage = true;
     }, 2000)
@@ -99,7 +97,7 @@ const answerLower = () => {
   if (artistTwoListeners < artistOneListeners || artistOneListeners === artistTwoListeners) {
     data.score++;
     data.answerCorrect = true;
-    playSound('../public/sounds/level-up-short.mp3');
+    playSound('/sounds/level-up-short.mp3');
 
     setTimeout(() => {
       data.artistsList.shift();
@@ -109,7 +107,7 @@ const answerLower = () => {
     if (data.artistsList.length < 5) getArtist();
   } else {
     data.answerIncorrect = true;
-    playSound('../public/sounds/meep-merp.mp3');
+    playSound('/sounds/meep-merp.mp3');
     setTimeout(() => {
       data.showGameOverMessage = true;
     }, 1800)
