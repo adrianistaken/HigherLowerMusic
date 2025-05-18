@@ -1,3 +1,8 @@
+<script setup>
+import { useGameManagerStore } from '@/stores/gameManagerStore'
+const gameManagerStore = useGameManagerStore();
+</script>
+
 <template>
     <div>
         <!-- Hero section -->
@@ -9,17 +14,11 @@
                         Guess if the second artist has a higher or lower monthly listener count than the
                         first artist! (based on Spotify's updated monthly listener count)
                     </p>
-                    <button class="btn btn-primary" @click="$emit('startGame')">Start Guessing</button>
+                    <button class="btn btn-primary" @click="gameManagerStore.startFirstGame()">Start Guessing</button>
                 </div>
             </div>
         </div>
     </div>
 </template>
 
-<script>
-export default {
-
-}
-</script>
-
-<style></style>
+<style scoped></style>
