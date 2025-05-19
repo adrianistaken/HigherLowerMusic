@@ -81,7 +81,7 @@ const getArtist = async (retries = 5) => {
       return getArtist(retries - 1);
     }
 
-    console.log('"Artist found:", artist.name);');
+    console.log("Artist found:", artist.name);
     return {
       info: artist,
       listeners: listeners,
