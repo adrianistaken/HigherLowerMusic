@@ -16,7 +16,7 @@ const props = defineProps({
 
             <!-- Content on top of dark overlay -->
             <div class="relative z-10">
-                <h2 class="text-4xl md:text-5xl font-bold drop-shadow-md mb-2">{{ props.artist.info.name }}</h2>
+                <h2 class="text-4xl md:text-5xl font-bold drop-shadow-md mb-2">{{ props.artist.info?.name }}</h2>
                 <h3 class="text-2xl md:text-2xl drop-shadow-sm mb-2">has</h3>
                 <div v-if="props.showListeners">
                     <p
@@ -25,7 +25,7 @@ const props = defineProps({
                     </p>
                     <p class="flex items-center justify-center gap-2 text-lg md:text-2xl drop-shadow-sm">
                         monthly listeners
-                        <a :href="artist.info.external_urls.spotify" class="tooltip" data-tip="Listen on Spotify"
+                        <a :href="artist.info?.external_urls.spotify" class="tooltip" data-tip="Listen on Spotify"
                             target="_blank" rel="noopener noreferrer">
                             <!-- Spotify Logo -->
                             <svg xmlns="http://www.w3.org/2000/svg" height="25" width="25" viewBox="-20 50 250 100">
@@ -41,11 +41,11 @@ const props = defineProps({
                         class="flex flex-col gap-4 justify-center mt-3 items-center">
                         <div class="flex flex-col gap-4">
                             <button class="btn btn-lg btn-outline w-50"
-                                @click="gameManagerStore.guessHigher">Higher</button>
+                                @click="gameManagerStore.guess('higher')">Higher</button>
                             <button class="btn btn-lg btn-outline w-50"
-                                @click="gameManagerStore.guessLower">Lower</button>
+                                @click="gameManagerStore.guess('lower')">Lower</button>
                         </div>
-                        <p class="text-lg md">monthly listeners than {{ gameManagerStore.firstArtist.info.name }}</p>
+                        <p class="text-lg md">monthly listeners than {{ gameManagerStore.firstArtist.info?.name }}</p>
                     </div>
                     <div v-else>
                         <div>
@@ -55,8 +55,8 @@ const props = defineProps({
                             </p>
                             <p class="flex items-center justify-center gap-2 text-lg md:text-2xl drop-shadow-sm">
                                 monthly listeners
-                                <a v-if="artist.info.name !== gameManagerStore.artistsList[1].info.name"
-                                    :href="artist.info.external_urls.spotify" class="tooltip"
+                                <a v-if="artist.info.name !== gameManagerStore.artistsList[1].info?.name"
+                                    :href="artist.info?.external_urls.spotify" class="tooltip"
                                     data-tip="Listen on Spotify" target="_blank" rel="noopener noreferrer">
                                     <!-- Spotify Logo -->
                                     <svg xmlns="http://www.w3.org/2000/svg" height="25" width="25"
