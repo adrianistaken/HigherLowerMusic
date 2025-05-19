@@ -61,36 +61,19 @@ export const useGameManagerStore = defineStore("gameManager", {
       const audio = new Audio(path);
       audio.play();
     },
-    guessHigher() {
+    guess(direction) {
       const [artistOne, artistTwo] = this.artistsList;
       const a1 = parseFloat(artistOne.listeners.replace(/,/g, ""));
       const a2 = parseFloat(artistTwo.listeners.replace(/,/g, ""));
 
-      if (a2 >= a1) {
-        this.currentScore++;
-        this.answerCorrect = true;
-        this.playSound("/sounds/level-up-short.mp3");
+      const correct =
+        direction === "higher"
+          ? a2 >= a1
+          : direction === "lower"
+          ? a2 <= a1
+          : false;
 
-        setTimeout(() => {
-          this.shiftArtists();
-          this.answerCorrect = false;
-        }, 2000);
-
-        if (this.artistsList.length < 5) this.getArtist();
-      } else {
-        this.answerIncorrect = true;
-        this.playSound("/sounds/meep-merp.mp3");
-        setTimeout(() => {
-          this.currentScreen = "gameOver";
-        }, 4000);
-      }
-    },
-    guessLower() {
-      const [artistOne, artistTwo] = this.artistsList;
-      const a1 = parseFloat(artistOne.listeners.replace(/,/g, ""));
-      const a2 = parseFloat(artistTwo.listeners.replace(/,/g, ""));
-
-      if (a2 <= a1) {
+      if (correct) {
         this.currentScore++;
         this.answerCorrect = true;
         this.playSound("/sounds/level-up-short.mp3");
