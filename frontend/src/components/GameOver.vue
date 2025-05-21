@@ -109,12 +109,12 @@ const message = computed(() => {
                 <button class="btn btn-lg btn-outline w-50" @click="gameManagerStore.startNewGame()">Play
                     Again</button>
 
-                <div class="flex flex-col items-center justify-center text-center">
+                <!-- <div class="flex flex-col items-center justify-center text-center">
                     <p class="text-md mt-10 text-neutral-content">🎤
                         <a href="https://your-notion-form-link" target="_blank" class="underline"> Ideas,
                             feedback, bugs</a>
                     </p>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
