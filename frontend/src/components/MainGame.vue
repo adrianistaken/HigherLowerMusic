@@ -1,11 +1,27 @@
 <script setup>
+import { onMounted, onUnmounted } from 'vue'
 import ArtistCard from './ArtistCard.vue';
 import { useGameManagerStore } from '@/stores/gameManagerStore'
 const gameManagerStore = useGameManagerStore();
+
+function setVh() {
+    const vh = window.innerHeight * 0.01
+    document.documentElement.style.setProperty('--vh', `${vh}px`)
+}
+
+onMounted(() => {
+    setVh()
+    window.addEventListener('resize', setVh)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('resize', setVh)
+})
 </script>
 
 <template>
-    <TransitionGroup name="slide" tag="div" class="absolute w-full h-full flex overflow-hidden md:flex-row flex-col">
+    <TransitionGroup name="slide" tag="div"
+        class="absolute w-full h-full flex overflow-hidden md:flex-row flex-col fix-mobile-height">
         <div v-for="(artist, index) in gameManagerStore.artistsList" :key="artist.info.id"
             class="w-full md:w-1/2 md:h-full h-1/2 flex-shrink-0">
             <ArtistCard :artist="artist" :showListeners="index === 0" />
@@ -28,5 +44,15 @@ const gameManagerStore = useGameManagerStore();
 
 .slide-leave-active {
     position: absolute;
+}
+
+:root {
+    --vh: 100vh;
+}
+
+@media (max-width: 768px) {
+    .fix-mobile-height {
+        height: calc(var(--vh, 1vh) * 100);
+    }
 }
 </style>
