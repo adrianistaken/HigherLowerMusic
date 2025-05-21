@@ -3,6 +3,7 @@ import { onMounted } from 'vue';
 import MainMenu from './components/MainMenu.vue';
 import MainGame from './components/MainGame.vue';
 import GameOver from './components/GameOver.vue';
+import Header from './components/Header.vue';
 
 import { useGameManagerStore } from '@/stores/gameManagerStore'
 
@@ -16,16 +17,14 @@ onMounted(async () => {
 
 <template>
   <div
-    class="w-full h-screen animate-subtle-gradient flex justify-center items-center bg-gradient-to-br from-orange-200 via-green-700 to-blue-900 bg-[length:300%_300%]">
+    class="w-full h-screen animate-subtle-gradient flex justify-center items-center bg-gradient-to-br from-orange-200 via-green-700 to-blue-900 bg-[length:300%_300%] font-[Roboto]">
     <!-- Main Menu -->
     <div v-if="gameManagerStore.currentScreen === 'mainMenu'">
       <MainMenu />
     </div>
 
     <!-- Header -->
-    <!-- <Header v-if="gameManagerStore.currentScreen === 'mainGame'" :score="data.score" :volumePercent="data.volumePercent" :isMuted="data.isMuted"
-      @toggleMute="data.isMuted = !data.isMuted" @update-volume="data.volumePercent = $event"
-      @update-muted="data.isMuted = $event" /> -->
+    <Header v-if="gameManagerStore.currentScreen === 'activeGame'" :score="gameManagerStore.currentScore" />
 
     <!-- Main Game -->
     <MainGame v-if="gameManagerStore.currentScreen === 'activeGame'">
