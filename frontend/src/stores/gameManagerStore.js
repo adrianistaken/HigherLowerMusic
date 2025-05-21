@@ -5,6 +5,7 @@ export const useGameManagerStore = defineStore("gameManager", {
   state: () => ({
     currentScreen: "mainMenu",
     currentScore: 0,
+    highScore: parseInt(localStorage.getItem("highScore")) || 0,
     answerCorrect: false,
     answerIncorrect: false,
 
@@ -75,6 +76,10 @@ export const useGameManagerStore = defineStore("gameManager", {
 
       if (correct) {
         this.currentScore++;
+        if (this.currentScore > this.highScore) {
+          this.highScore = this.currentScore;
+          localStorage.setItem("highScore", this.highScore);
+        }
         this.answerCorrect = true;
         this.playSound("/sounds/level-up-short.mp3");
 
