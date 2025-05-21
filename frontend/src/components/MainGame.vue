@@ -5,16 +5,28 @@ const gameManagerStore = useGameManagerStore();
 </script>
 
 <template>
-    <div class="w-full min-h-screen">
-        <div class="flex flex-col md:flex-row h-screen">
-            <div class="flex-1">
-                <ArtistCard :artist="gameManagerStore.firstArtist" :showListeners="true" />
-            </div>
-            <div class="flex-1">
-                <ArtistCard :artist="gameManagerStore.secondArtist" :showListeners="false" />
-            </div>
+    <TransitionGroup name="slide" tag="div" class="absolute w-full h-full flex overflow-hidden">
+        <div v-for="(artist, index) in gameManagerStore.artistsList" :key="artist.info.id"
+            class="w-full md:w-1/2 h-full flex-shrink-0">
+            <ArtistCard :artist="artist" :showListeners="index === 0" />
         </div>
-    </div>
+    </TransitionGroup>
 </template>
 
-<style scoped></style>
+<style scoped>
+.slide-move {
+    transition: transform 0.5s ease;
+}
+
+.slide-enter-from {
+    transform: translateX(100%);
+}
+
+.slide-leave-to {
+    transform: translateX(-100%);
+}
+
+.slide-leave-active {
+    position: absolute;
+}
+</style>
