@@ -81,7 +81,7 @@ export const useGameManagerStore = defineStore("gameManager", {
           localStorage.setItem("highScore", this.highScore);
         }
         this.answerCorrect = true;
-        this.playSound("/sounds/level-up-short.mp3");
+        // this.playSound("/sounds/level-up-short.mp3");
 
         setTimeout(() => {
           this.shiftArtists();
@@ -91,7 +91,7 @@ export const useGameManagerStore = defineStore("gameManager", {
         if (this.artistsList.length < 5) this.getArtist();
       } else {
         this.answerIncorrect = true;
-        this.playSound("/sounds/meep-merp.mp3");
+        // this.playSound("/sounds/meep-merp.mp3");
         setTimeout(() => {
           this.currentScreen = "gameOver";
         }, 4000);
