@@ -18,8 +18,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="text-slate-200 absolute bottom-0 w-screen p-6 z-[1]">
-    <div class="flex items-center justify-between">
+  <div class="text-slate-200 absolute top-0 w-screen p-4 z-[1]">
+    <div class="flex items-center justify-between sm:text-xl text-md">
 
       <!-- Audio -->
       <!-- <button class="cursor-pointer" @click="emit('toggleMute')"> -->
@@ -39,8 +39,8 @@ onMounted(async () => {
       <!-- </button> -->
 
       <!-- Score -->
-      <h2 class="text-xl">High Score: {{ gameManagerStore.highScore }}</h2>
-      <h2 class="text-xl">Score: {{ gameManagerStore.currentScore }}</h2>
+      <h2>High Score: {{ gameManagerStore.highScore }}</h2>
+      <h2>Score: {{ gameManagerStore.currentScore }}</h2>
     </div>
   </div>
 </template>
