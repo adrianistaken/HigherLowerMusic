@@ -17,8 +17,10 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div
-    class="w-full h-screen animate-subtle-gradient flex justify-center items-center bg-gradient-to-br from-orange-200 via-green-700 to-blue-900 bg-[length:300%_300%] font-[Roboto]">
+  <div class="fixed inset-0 overflow-hidden md:static md:overflow-auto
+         w-full h-screen animate-subtle-gradient flex justify-center items-center 
+         bg-gradient-to-br from-orange-200 via-green-700 to-blue-900 
+         bg-[length:300%_300%] font-[Roboto]">
     <!-- Main Menu -->
     <div v-if="gameManagerStore.currentScreen === 'mainMenu'">
       <MainMenu />
