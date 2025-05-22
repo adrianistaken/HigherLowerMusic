@@ -20,6 +20,11 @@ export const useGameManagerStore = defineStore("gameManager", {
       this.currentScore = 0;
       this.answerCorrect = false;
       this.answerIncorrect = false;
+
+      setTimeout(async () => {
+        console.log("getting first two artists in setTimeout");
+        await this.getArtist();
+      }, 5000);
     },
     async startNewGame() {
       this.currentScreen = "activeGame";
