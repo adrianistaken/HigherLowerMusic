@@ -21,7 +21,6 @@ watch(() => gameManagerStore.answerMade, async (newVal) => {
 
         const raw = props.artist.listeners;
         const target = typeof raw === "string" ? Number(raw.replace(/,/g, '')) : Number(raw);
-        console.log("Target:", target);
 
         if (!target || isNaN(target)) {
             console.warn("Invalid target listener count:", props.artist.listeners);
