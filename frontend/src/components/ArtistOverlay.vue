@@ -1,4 +1,6 @@
 <script setup>
+import { ref, watch, nextTick } from "vue"
+
 import { useGameManagerStore } from '@/stores/gameManagerStore'
 const gameManagerStore = useGameManagerStore();
 
@@ -6,6 +8,44 @@ const props = defineProps({
     artist: Object,
     showListeners: Boolean
 })
+
+const displayedListeners = ref(0);
+const hasAnimated = ref(false);
+
+watch(() => gameManagerStore.answerMade, async (newVal) => {
+    if (props.artist.info?.name !== gameManagerStore.secondArtist.info?.name) return;
+
+    if (newVal && !hasAnimated.value) {
+        hasAnimated.value = true;
+        await nextTick();
+
+        const raw = props.artist.listeners;
+        const target = typeof raw === "string" ? Number(raw.replace(/,/g, '')) : Number(raw);
+        console.log("Target:", target);
+
+        if (!target || isNaN(target)) {
+            console.warn("Invalid target listener count:", props.artist.listeners);
+            return;
+        }
+
+        const duration = 800;
+        const start = performance.now();
+
+        const animate = (now) => {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            displayedListeners.value = Math.floor(target * progress);
+            if (progress < 1) requestAnimationFrame(animate);
+        };
+
+        requestAnimationFrame(animate);
+    }
+
+    if (!newVal) {
+        hasAnimated.value = false;
+        displayedListeners.value = 0;
+    }
+});
 </script>
 
 <template>
@@ -69,7 +109,7 @@ const props = defineProps({
                         <div>
                             <p
                                 class="text-4xl md:text-5xl font-semibold flex items-center justify-center gap-2 mb-2 drop-shadow text-green-400">
-                                {{ props.artist.listeners?.toLocaleString() }}
+                                {{ displayedListeners.toLocaleString() }}
                             </p>
                             <p class="flex items-center justify-center gap-2 text-lg md:text-2xl drop-shadow-sm">
                                 monthly listeners

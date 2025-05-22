@@ -8,6 +8,7 @@ export const useGameManagerStore = defineStore("gameManager", {
     highScore: parseInt(localStorage.getItem("highScore")) || 0,
     answerCorrect: false,
     answerIncorrect: false,
+    answerMade: false,
 
     firstArtist: null,
     secondArtist: null,
@@ -25,6 +26,7 @@ export const useGameManagerStore = defineStore("gameManager", {
       this.currentScore = 0;
       this.answerCorrect = false;
       this.answerIncorrect = false;
+      this.answerMade = false;
 
       this.artistsList.shift();
       this.artistsList.shift();
@@ -57,6 +59,8 @@ export const useGameManagerStore = defineStore("gameManager", {
       // After shift, [0] becomes new first, [1] becomes new second
       this.firstArtist = this.artistsList[0] || null;
       this.secondArtist = this.artistsList[1] || null;
+
+      this.answerMade = false;
     },
     playSound(path) {
       const audio = new Audio(path);
@@ -66,6 +70,8 @@ export const useGameManagerStore = defineStore("gameManager", {
       const [artistOne, artistTwo] = this.artistsList;
       const a1 = parseFloat(artistOne.listeners.replace(/,/g, ""));
       const a2 = parseFloat(artistTwo.listeners.replace(/,/g, ""));
+
+      this.answerMade = true;
 
       const correct =
         direction === "higher"
