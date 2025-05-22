@@ -22,7 +22,6 @@ export const useGameManagerStore = defineStore("gameManager", {
       this.answerIncorrect = false;
 
       setTimeout(async () => {
-        console.log("getting first two artists in setTimeout");
         await this.getArtist();
       }, 5000);
     },
