@@ -1,6 +1,6 @@
 # 🎵 Higher Lower: Music Edition
 
-## 🎮 [Play Now!](https://higherlowermusic.netlify.app/)
+## 🎮 [Play Now!](https://higherlowermusic.com/)
 
 ---
 
