@@ -14,12 +14,18 @@ const gameManagerStore = useGameManagerStore();
 </template>
 
 <style scoped>
+.slide-enter-active,
+.slide-leave-active,
 .slide-move {
     transition: transform 0.5s ease;
 }
 
 .slide-enter-from {
     transform: translateX(100%);
+}
+
+.slide-leave-from {
+    transform: translateX(0);
 }
 
 .slide-leave-to {
